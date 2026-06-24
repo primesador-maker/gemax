@@ -1,4 +1,3 @@
-const TelegramBot = require('node-telegram-bot-api');
 const http = require('http');
 
 // HTTP server for Render Web Service
@@ -12,112 +11,112 @@ http.createServer((req, res) => {
 const BOT_TOKEN = process.env.BOT_TOKEN || '8798527679:AAGsF2R0m_iV_ThurVTf2CN9VecoCAV2rcU';
 const ADMIN_ID = 7715442708;
 const MINI_APP_URL = process.env.MINI_APP_URL || 'https://primesador-maker.github.io/gemax/';
-const BACKEND_URL = process.env.BACKEND_URL || 'https://gem-cart-backend.onrender.com';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://gemax-backend.onrender.com';
 const PAYMENT_PHONE = '+251990066832';
 const PAYMENT_NAME = 'Biruk';
 const SUPPORT_USERNAME = 'gem_core';
 
-const bot = new TelegramBot(BOT_TOKEN, { polling: true });
+// Use fetch-based Telegram API (no package needed!)
+const BASE_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
+let lastUpdateId = 0;
 
-console.log('🤖 GEMAX Bot starting...');
-
-// /start command
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const username = msg.from.username ? '@' + msg.from.username : 'Customer';
-    
-    const welcomeMessage = `💎 *Welcome to GEMAX Store, ${username}!*\n\n` +
-        `✨ Quality to the Max\n` +
-        `🛍️ Bags, Clothes, Jewelry, Perfumes & more\n` +
-        `💳 Pay easily with Telebirr\n\n` +
-        `👇 Click below to start shopping:`;
-    
-    bot.sendMessage(chatId, welcomeMessage, {
-        parse_mode: 'Markdown',
-        reply_markup: {
-            inline_keyboard: [
-                [{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],
-                [{ text: '📞 Contact Support', url: `https://t.me/${SUPPORT_USERNAME}` }]
-            ]
-        }
-    });
-});
-
-// /help command
-bot.onText(/\/help/, (msg) => {
-    bot.sendMessage(msg.chat.id,
-        `💎 *GEMAX Store Help*\n\n` +
-        `✨ Quality to the Max\n\n` +
-        `🛍️ *How to Shop:*\n` +
-        `• Click OPEN GEMAX STORE button\n` +
-        `• Browse products by category\n` +
-        `• Add items to your cart\n` +
-        `• Place your order\n\n` +
-        `💳 *Payment:* Telebirr\n` +
-        `📱 ${PAYMENT_PHONE}\n` +
-        `👤 ${PAYMENT_NAME}\n\n` +
-        `📞 Support: @${SUPPORT_USERNAME}`,
-        {
-            parse_mode: 'Markdown',
-            reply_markup: {
-                inline_keyboard: [
-                    [{ text: '🛒 START SHOPPING', web_app: { url: MINI_APP_URL } }]
-                ]
+async function getUpdates() {
+    try {
+        const res = await fetch(`${BASE_URL}/getUpdates?offset=${lastUpdateId + 1}&timeout=10`);
+        const data = await res.json();
+        if (data.ok && data.result.length > 0) {
+            for (const update of data.result) {
+                lastUpdateId = update.update_id;
+                handleUpdate(update);
             }
         }
-    );
-});
+    } catch (e) {
+        console.error('Polling error:', e.message);
+    }
+    setTimeout(getUpdates, 500);
+}
 
-// 🔔 ORDER NOTIFICATIONS
-bot.on('message', async (msg) => {
-    if (msg.web_app_data) {
+async function sendMessage(chatId, text, options = {}) {
+    try {
+        const body = { chat_id: chatId, text, ...options };
+        if (options.reply_markup) body.reply_markup = JSON.stringify(options.reply_markup);
+        if (options.parse_mode) body.parse_mode = options.parse_mode;
+        await fetch(`${BASE_URL}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+    } catch (e) {
+        console.error('Send error:', e.message);
+    }
+}
+
+function handleUpdate(update) {
+    if (update.message) {
+        const msg = update.message;
+        const chatId = msg.chat.id;
+        const text = msg.text || '';
+        const username = msg.from?.username ? '@' + msg.from.username : 'Customer';
+
+        if (text === '/start') {
+            sendMessage(chatId,
+                `💎 *Welcome to GEMAX Store, ${username}!*\n\n✨ Quality to the Max\n🛍️ Bags, Clothes, Jewelry, Perfumes & more\n💳 Pay easily with Telebirr\n\n👇 Click below to start shopping:`,
+                {
+                    parse_mode: 'Markdown',
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],
+                            [{ text: '📞 Contact Support', url: `https://t.me/${SUPPORT_USERNAME}` }]
+                        ]
+                    }
+                }
+            );
+        } else if (text === '/help') {
+            sendMessage(chatId,
+                `💎 *GEMAX Store Help*\n\n✨ Quality to the Max\n\n🛍️ *How to Shop:*\n• Click OPEN GEMAX STORE\n• Browse by category\n• Add to cart\n• Place order\n\n💳 *Payment:* Telebirr\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n📞 Support: @${SUPPORT_USERNAME}`,
+                {
+                    parse_mode: 'Markdown',
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: '🛒 START SHOPPING', web_app: { url: MINI_APP_URL } }]
+                        ]
+                    }
+                }
+            );
+        }
+    }
+
+    // Handle web_app_data
+    if (update.message?.web_app_data) {
         try {
-            const data = JSON.parse(msg.web_app_data.data);
-            
+            const data = JSON.parse(update.message.web_app_data.data);
             if (data.type === 'new_order') {
                 const order = data.order;
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                 const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                
-                // Send to ADMIN (YOU)
-                const adminMessage = `🔔 *NEW ORDER!*\n\n` +
-                    `🆔 #${order.id}\n` +
-                    `👤 ${order.customer_username}\n` +
-                    `📱 ID: \`${order.customer_id}\`\n\n` +
-                    `📦 *Items:*\n${order.items.map(i => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} Birr`).join('\n')}\n\n` +
-                    `💰 *Total: ${order.total} Birr*\n\n` +
-                    `🕐 ${timeStr}, ${dateStr}\n\n` +
-                    `💳 Telebirr: ${PAYMENT_PHONE}\n` +
-                    `👤 ${PAYMENT_NAME}\n\n` +
-                    `⏳ Status: Pending`;
-                
-                await bot.sendMessage(ADMIN_ID, adminMessage, { parse_mode: 'Markdown' });
-                console.log('✅ Admin notified:', order.id);
-                
-                // Send to CUSTOMER
-                const customerMessage = `✅ *Order Confirmed!*\n\n` +
-                    `Order #${order.id}\n` +
-                    `Total: ${order.total} Birr\n\n` +
-                    `💳 *Pay via Telebirr:*\n` +
-                    `📱 ${PAYMENT_PHONE}\n` +
-                    `👤 ${PAYMENT_NAME}\n\n` +
-                    `📞 Support: @${SUPPORT_USERNAME}\n\n` +
-                    `Thank you for shopping with GEMAX Store! ✨`;
-                
-                await bot.sendMessage(msg.chat.id, customerMessage, { parse_mode: 'Markdown' });
-                console.log('✅ Customer notified:', order.id);
+
+                // Notify Admin
+                sendMessage(ADMIN_ID,
+                    `🔔 *NEW ORDER!*\n\n🆔 #${order.id}\n👤 ${order.customer_username}\n📱 ID: \`${order.customer_id}\`\n\n📦 *Items:*\n${order.items.map(i => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} Birr`).join('\n')}\n\n💰 *Total: ${order.total} Birr*\n\n🕐 ${timeStr}, ${dateStr}\n\n💳 Telebirr: ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n⏳ Status: Pending`,
+                    { parse_mode: 'Markdown' }
+                );
+
+                // Notify Customer
+                sendMessage(update.message.chat.id,
+                    `✅ *Order Confirmed!*\n\nOrder #${order.id}\nTotal: ${order.total} Birr\n\n💳 *Pay via Telebirr:*\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n📞 Support: @${SUPPORT_USERNAME}\n\nThank you for shopping with GEMAX Store! ✨`,
+                    { parse_mode: 'Markdown' }
+                );
+
+                console.log('✅ Order processed:', order.id);
             }
         } catch (e) {
             console.error('Order error:', e.message);
         }
     }
-});
+}
 
-// Error handling
-bot.on('polling_error', (error) => {
-    console.error('Polling error:', error.message);
-});
-
+console.log('🤖 GEMAX Bot starting...');
+getUpdates();
 console.log('✅ GEMAX Store Bot ready!');
 console.log('💎 Quality to the Max');
