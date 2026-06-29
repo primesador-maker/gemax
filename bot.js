@@ -57,7 +57,7 @@ function handleUpdate(update) {
         const text = msg.text || '';
         const username = msg.from?.username ? '@' + msg.from.username : 'Customer';
 
-        if (text === '/start') {
+        if (text === '/start' || text === '/Start' || text === 'start') {
             sendMessage(chatId,
                 `💎 *Welcome to GEMAX Store, ${username}!*\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ${CHANNEL}\n\n👇 Start shopping:`,
                 {
