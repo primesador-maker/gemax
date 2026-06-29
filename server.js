@@ -145,4 +145,4 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', products: p.length, orders: o.length });
 });
 
-app.listen(PORT, () => console.log(`✅ GEMAX Backend on port ${PORT}`));h
+app.listen(PORT, () => console.log(`✅ GEMAX Backend on port ${PORT}`));
