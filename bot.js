@@ -66,12 +66,21 @@ async function handleUpdate(update) {
 
         if (userId) { userIds.add(userId); saveUsers() }
 
-        // /start
+                // /start
         if (text === '/start' || text === '/Start' || text === 'start') {
-            sendMessage(chatId,
-                `💎 *Welcome to GEMAX Store, ${username}!*\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ${CHANNEL}\n\n👇 Start shopping:`,
-                { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: `https://t.me/${SUPPORT_USERNAME}` }]] } }
-            );
+            const welcomeMsg = '💎 *Welcome to GEMAX Store, ' + username + '!*\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: @Gemax_shopping\n\n👇 Start shopping:';
+            
+            console.log('Sending /start to', username);
+            
+            sendMessage(chatId, welcomeMsg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],
+                        [{ text: '📞 Contact Support', url: 'https://t.me/gem_core' }]
+                    ]
+                }
+            });
             return;
         }
 
