@@ -8,7 +8,7 @@ http.createServer((req, res) => {
     res.end('<h1>💎 GEMAX Store Bot Running</h1>');
 }).listen(PORT, () => console.log('🌐 Web server on port ' + PORT));
 
-const BOT_TOKEN = process.env.BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE';
+const BOT_TOKEN = process.env.BOT_TOKEN || '8798527679:AAGsF2R0m_iV_ThurVTf2CN9VecoCAV2rcU';
 const ADMIN_ID = 7715442708;
 const MINI_APP_URL = process.env.MINI_APP_URL || 'https://primesador-maker.github.io/gemax/';
 const PAYMENT_PHONE = '+251990066832';
