@@ -50,10 +50,24 @@ async function sendMessage(chatId, text, options = {}) {
         const body = { chat_id: chatId, text: text };
         if (options.reply_markup) body.reply_markup = JSON.stringify(options.reply_markup);
         if (options.parse_mode) body.parse_mode = options.parse_mode;
-        const response = await fetch(`${BASE_URL}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        
+        const response = await fetch(`${BASE_URL}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
         const result = await response.json();
+        
+        if (!result.ok) {
+            console.error('❌ Send error:', result.description, '| Code:', result.error_code);
+        } else {
+            console.log('✅ Message sent to', chatId);
+        }
         return result.ok;
-    } catch (e) { return false }
+    } catch (e) {
+        console.error('❌ Send exception:', e.message);
+        return false;
+    }
 }
 
 async function handleUpdate(update) {
