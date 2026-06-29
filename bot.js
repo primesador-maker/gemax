@@ -45,29 +45,20 @@ async function getUpdates() {
     setTimeout(getUpdates, 500);
 }
 
-async function sendMessage(chatId, text, options = {}) {
+async function sendMessage(chatId, text, opts = {}) {
     try {
         const body = { chat_id: chatId, text: text };
-        if (options.reply_markup) body.reply_markup = JSON.stringify(options.reply_markup);
-        if (options.parse_mode) body.parse_mode = options.parse_mode;
-        
+        if (opts.reply_markup) body.reply_markup = JSON.stringify(opts.reply_markup);
         const response = await fetch(`${BASE_URL}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
         const result = await response.json();
-        
-        if (!result.ok) {
-            console.error('❌ Send error:', result.description, '| Code:', result.error_code);
-        } else {
-            console.log('✅ Message sent to', chatId);
-        }
+        if (!result.ok) console.error('Send error:', result.description);
+        else console.log('✅ Message sent');
         return result.ok;
-    } catch (e) {
-        console.error('❌ Send exception:', e.message);
-        return false;
-    }
+    } catch (e) { console.error('Send error:', e.message); return false }
 }
 
 async function handleUpdate(update) {
@@ -79,19 +70,17 @@ async function handleUpdate(update) {
         const userId = msg.from?.id;
 
         if (userId) { userIds.add(userId); saveUsers() }
+        console.log('📩 Message:', text, 'from', username);
 
-                // /start
+        // /start
         if (text === '/start' || text === '/Start' || text === 'start') {
-            const welcomeMsg = '💎 *Welcome to GEMAX Store, ' + username + '!*\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: @Gemax_shopping\n\n👇 Start shopping:';
-            
-            console.log('Sending /start to', username);
+            const welcomeMsg = '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:';
             
             sendMessage(chatId, welcomeMsg, {
-                parse_mode: 'Markdown',
                 reply_markup: {
                     inline_keyboard: [
                         [{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],
-                        [{ text: '📞 Contact Support', url: 'https://t.me/gem_core' }]
+                        [{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]
                     ]
                 }
             });
@@ -100,85 +89,106 @@ async function handleUpdate(update) {
 
         // /help
         if (text === '/help' || text === '/Help' || text === 'help') {
-            sendMessage(chatId,
-                `💎 *GEMAX Store Help*\n\n✨ Quality to the Max\n\n🛍️ *How to Order:*\n• Click OPEN GEMAX STORE\n• Browse products\n• Add to cart\n• Place order\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr to confirm\n🤝 Meetup after payment\n\n💳 *Payment:*\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n📞 Support: @${SUPPORT_USERNAME}\n📢 Channel: ${CHANNEL}`,
-                { parse_mode: 'Markdown', reply_markup: { inline_keyboard: [[{ text: '🛒 START SHOPPING', web_app: { url: MINI_APP_URL } }]] } }
-            );
+            const helpMsg = '💎 GEMAX Store Help\n\n✨ Quality to the Max\n\n🛍️ How to Order:\n• Click OPEN GEMAX STORE\n• Browse products\n• Add to cart\n• Place order\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr to confirm\n🤝 Meetup after payment\n\n💳 Payment:\n📱 ' + PAYMENT_PHONE + '\n👤 ' + PAYMENT_NAME + '\n\n📞 Support: @' + SUPPORT_USERNAME + '\n📢 Channel: ' + CHANNEL;
+            
+            sendMessage(chatId, helpMsg, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: '🛒 START SHOPPING', web_app: { url: MINI_APP_URL } }]
+                    ]
+                }
+            });
             return;
         }
 
-        // 📢 TEXT BROADCAST (Admin only)
+        // TEXT BROADCAST (Admin only)
         if (text.startsWith('/broadcast ') && String(userId) === String(ADMIN_ID)) {
             const broadcastMsg = text.replace('/broadcast ', '');
             let sent = 0;
             for (const uid of userIds) {
                 try {
-                    const ok = await sendMessage(uid, `📢 *GEMAX Store*\n\n${broadcastMsg}`, { parse_mode: 'Markdown' });
+                    const ok = await sendMessage(uid, '📢 GEMAX Store\n\n' + broadcastMsg);
                     if (ok) sent++;
                     await new Promise(r => setTimeout(r, 200));
                 } catch(e) {}
             }
-            sendMessage(chatId, `✅ Text broadcast sent to ${sent}/${userIds.size} users!`);
+            sendMessage(chatId, '✅ Broadcast sent to ' + sent + '/' + userIds.size + ' users!');
             return;
         }
 
-        // 📸 PHOTO BROADCAST (Admin forwards photo)
+        // PHOTO BROADCAST (Admin forwards photo)
         if (msg.photo && String(userId) === String(ADMIN_ID)) {
             const caption = msg.caption || '';
             const fileId = msg.photo[msg.photo.length - 1].file_id;
             let sent = 0;
             for (const uid of userIds) {
                 try {
-                    const body = { chat_id: uid, photo: fileId, caption: caption ? `📢 *GEMAX Store*\n\n${caption}` : '📢 *GEMAX Store*', parse_mode: 'Markdown' };
-                    const r = await fetch(`${BASE_URL}/sendPhoto`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                    const body = { chat_id: uid, photo: fileId, caption: caption ? '📢 GEMAX Store\n\n' + caption : '📢 GEMAX Store' };
+                    const r = await fetch(`${BASE_URL}/sendPhoto`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
                     if ((await r.json()).ok) sent++;
                     await new Promise(r => setTimeout(r, 300));
                 } catch(e) {}
             }
-            sendMessage(chatId, `✅ Photo broadcast sent to ${sent}/${userIds.size} users!`);
+            sendMessage(chatId, '✅ Photo sent to ' + sent + '/' + userIds.size + ' users!');
             return;
         }
 
-        // 🎥 VIDEO BROADCAST (Admin forwards video)
+        // VIDEO BROADCAST (Admin forwards video)
         if (msg.video && String(userId) === String(ADMIN_ID)) {
             const caption = msg.caption || '';
             const fileId = msg.video.file_id;
             let sent = 0;
             for (const uid of userIds) {
                 try {
-                    const body = { chat_id: uid, video: fileId, caption: caption ? `📢 *GEMAX Store*\n\n${caption}` : '📢 *GEMAX Store*', parse_mode: 'Markdown' };
-                    const r = await fetch(`${BASE_URL}/sendVideo`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                    const body = { chat_id: uid, video: fileId, caption: caption ? '📢 GEMAX Store\n\n' + caption : '📢 GEMAX Store' };
+                    const r = await fetch(`${BASE_URL}/sendVideo`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
                     if ((await r.json()).ok) sent++;
                     await new Promise(r => setTimeout(r, 300));
                 } catch(e) {}
             }
-            sendMessage(chatId, `✅ Video broadcast sent to ${sent}/${userIds.size} users!`);
+            sendMessage(chatId, '✅ Video sent to ' + sent + '/' + userIds.size + ' users!');
             return;
         }
 
-        // 📊 USER COUNT (Admin only)
+        // USER COUNT (Admin only)
         if (text === '/count' && String(userId) === String(ADMIN_ID)) {
-            sendMessage(chatId, `📊 Total bot users: ${userIds.size}`);
+            sendMessage(chatId, '📊 Total bot users: ' + userIds.size);
             return;
         }
     }
 
-    // 🔔 ORDER NOTIFICATIONS
+    // ORDER NOTIFICATIONS
     if (update.message?.web_app_data) {
         try {
             const data = JSON.parse(update.message.web_app_data.data);
             if (data.type === 'new_order') {
                 const order = data.order;
                 const ts = order.timestamp || new Date().toLocaleString();
-                await sendMessage(ADMIN_ID,
-                    `🔔 *NEW ORDER!*\n\n🆔 #${order.id}\n👤 ${order.customer_username}\n📱 ID: \`${order.customer_id}\`\n\n📦 *Items:*\n${order.items.map(i => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} Birr`).join('\n')}\n\n💰 *Total: ${order.total} Birr*\n\n🕐 ${ts}\n\n⏱️ Processing: 15-25 days\n💳 Telebirr: ${PAYMENT_PHONE} (${PAYMENT_NAME})\n\n⏳ Status: Pending`,
-                    { parse_mode: 'Markdown' }
-                );
-                await sendMessage(update.message.chat.id,
-                    `✅ *Order Confirmed!*\n\n🆔 #${order.id}\n💰 Total: ${order.total} Birr\n🕐 ${ts}\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr:\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n🤝 Meetup after payment\n\n📞 @${SUPPORT_USERNAME}\n📢 ${CHANNEL}\n\nThank you! ✨`,
-                    { parse_mode: 'Markdown' }
-                );
-                console.log('✅ Order:', order.id);
+                
+                let itemsList = '';
+                for (const i of order.items) {
+                    itemsList += '• ' + i.name + ' ×' + i.quantity + ' = ' + (i.price * i.quantity) + ' Birr\n';
+                }
+
+                // Notify Admin
+                const adminMsg = '🔔 NEW ORDER!\n\n🆔 #' + order.id + '\n👤 ' + order.customer_username + '\n📱 ID: ' + order.customer_id + '\n\n📦 Items:\n' + itemsList + '\n💰 Total: ' + order.total + ' Birr\n\n🕐 ' + ts + '\n\n⏱️ Processing: 15-25 days\n💳 Telebirr: ' + PAYMENT_PHONE + ' (' + PAYMENT_NAME + ')\n\n⏳ Status: Pending';
+                
+                await sendMessage(ADMIN_ID, adminMsg);
+                console.log('✅ Admin notified');
+
+                // Notify Customer
+                const custMsg = '✅ Order Confirmed!\n\n🆔 #' + order.id + '\n💰 Total: ' + order.total + ' Birr\n🕐 ' + ts + '\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr to confirm:\n📱 ' + PAYMENT_PHONE + '\n👤 ' + PAYMENT_NAME + '\n🤝 Meetup after payment\n\n📞 Questions? @' + SUPPORT_USERNAME + '\n📢 Channel: ' + CHANNEL + '\n\nThank you for shopping with GEMAX Store! ✨';
+                
+                await sendMessage(update.message.chat.id, custMsg);
+                console.log('✅ Customer notified');
             }
         } catch (e) { console.error('Order error:', e.message) }
     }
@@ -186,7 +196,7 @@ async function handleUpdate(update) {
 
 console.log('🤖 GEMAX Bot starting...');
 getUpdates();
-console.log(`✅ GEMAX Store Bot ready! (${userIds.size} users)`);
+console.log('✅ GEMAX Store Bot ready!');
 console.log('💎 Quality to the Max');
-console.log('🔔 Notifications: ON');
 console.log('📢 Broadcast: Text + Photo + Video');
+console.log('🔔 Notifications: ON');
