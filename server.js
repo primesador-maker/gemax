@@ -10,9 +10,7 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
 const DATA_DIR = path.join(__dirname, 'data');
-if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-}
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
@@ -24,14 +22,12 @@ function readJSON(fp) {
     try { return JSON.parse(fs.readFileSync(fp, 'utf8')); }
     catch(e) { return []; }
 }
-
 function writeJSON(fp, data) {
     fs.writeFileSync(fp, JSON.stringify(data, null, 2));
 }
 
 console.log('✅ GEMAX Backend Ready');
 
-// PRODUCTS
 app.get('/api/products', (req, res) => {
     const products = readJSON(PRODUCTS_FILE);
     res.json({ products: products.filter(p => !p.is_hidden) });
@@ -69,12 +65,10 @@ app.delete('/api/products/:id', (req, res) => {
     res.json({ success: true });
 });
 
-// ORDERS
 app.post('/api/orders', (req, res) => {
     const orders = readJSON(ORDERS_FILE);
     const { customer_id, customer_name, customer_username, items, timestamp } = req.body;
     const total = items.reduce((s, i) => s + (i.price * i.quantity), 0);
-    
     const no = {
         id: 'ORD-' + Date.now(),
         customer_id: String(customer_id),
@@ -87,10 +81,8 @@ app.post('/api/orders', (req, res) => {
         timestamp: timestamp || new Date().toISOString(),
         created_at: new Date().toISOString()
     };
-    
     orders.push(no);
     writeJSON(ORDERS_FILE, orders);
-    
     const products = readJSON(PRODUCTS_FILE);
     items.forEach(item => {
         const p = products.find(x => x.id === item.product_id);
@@ -100,49 +92,34 @@ app.post('/api/orders', (req, res) => {
         }
     });
     writeJSON(PRODUCTS_FILE, products);
-    
     res.json({ order_id: no.id, total });
 });
 
 app.get('/api/orders', (req, res) => {
     const orders = readJSON(ORDERS_FILE);
     const { customer_id, all } = req.query;
-    
-    if (all === 'true') {
-        res.json(orders);
-    } else if (customer_id) {
-        res.json(orders.filter(o => String(o.customer_id) === String(customer_id)));
-    } else {
-        res.status(400).json({ error: 'customer_id required' });
-    }
+    if (all === 'true') res.json(orders);
+    else if (customer_id) res.json(orders.filter(o => String(o.customer_id) === String(customer_id)));
+    else res.status(400).json({ error: 'customer_id required' });
 });
 
 app.put('/api/orders/:id/status', (req, res) => {
     const orders = readJSON(ORDERS_FILE);
     const o = orders.find(x => x.id === req.params.id);
-    if (o) {
-        o.status = req.body.status;
-        writeJSON(ORDERS_FILE, orders);
-        res.json(o);
-    } else {
-        res.status(404).json({ error: 'Not found' });
-    }
+    if (o) { o.status = req.body.status; writeJSON(ORDERS_FILE, orders); res.json(o); }
+    else res.status(404).json({ error: 'Not found' });
 });
 
-// ADMIN
 app.post('/api/admin/login', (req, res) => {
     if (req.body.password === (process.env.ADMIN_PASSWORD || 'sadmin')) {
         res.json({ token: 'admin_' + Date.now() });
-    } else {
-        res.status(401).json({ error: 'Wrong password' });
-    }
+    } else res.status(401).json({ error: 'Wrong password' });
 });
 
-// HEALTH
 app.get('/health', (req, res) => {
     const p = readJSON(PRODUCTS_FILE);
     const o = readJSON(ORDERS_FILE);
     res.json({ status: 'OK', products: p.length, orders: o.length });
 });
 
-app.listen(PORT, () => console.log(`✅ GEMAX Backend on port ${PORT}`));
+app.listen(PORT, () => console.log('✅ GEMAX Backend on port ' + PORT));
