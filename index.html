@@ -148,12 +148,8 @@ window.checkout=function(){
         hideLoading();
         if(res.order_id){
             // SEND NOTIFICATION TO BOT
-            try{
-                if(window.Telegram&&window.Telegram.WebApp){
-                    var orderData=JSON.stringify({type:'new_order',order:{id:res.order_id,customer_name:U.n,customer_username:U.u,customer_id:U.tid,items:items,total:total,timestamp:ts}});
-                    window.Telegram.WebApp.sendData(orderData);
-                }
-            }catch(e){}
+            // Notification is now handled by the bot checking the backend directly
+console.log('Order placed: ' + res.order_id);
             C=[];save('cart',[]);uCB();rC();
             toast('✅ Order placed!');swS('orders');
             alert('✅ Order Confirmed!\n\n🆔 '+res.order_id+'\n💰 Total: '+total.toLocaleString()+' Birr\n🕐 '+ts+'\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n📱 '+PH+'\n👤 '+PN+'\n🤝 Meetup after payment\n\n📞 @'+SU);
