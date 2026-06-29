@@ -7,16 +7,15 @@ http.createServer((req, res) => {
     res.end('<h1>💎 GEMAX Store Bot Running</h1><p>Quality to the Max</p>');
 }).listen(PORT, () => console.log(`🌐 Web server on port ${PORT}`));
 
-// BOT CONFIGURATION
-const BOT_TOKEN = process.env.BOT_TOKEN || '8798527679:AAGsF2R0m_iV_ThurVTf2CN9VecoCAV2rcU';
+// BOT CONFIG
+const BOT_TOKEN = process.env.BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE';
 const ADMIN_ID = 7715442708;
 const MINI_APP_URL = process.env.MINI_APP_URL || 'https://primesador-maker.github.io/gemax/';
-const BACKEND_URL = process.env.BACKEND_URL || 'https://gemax-backend.onrender.com';
 const PAYMENT_PHONE = '+251990066832';
 const PAYMENT_NAME = 'Biruk';
 const SUPPORT_USERNAME = 'gem_core';
+const CHANNEL = '@Gemax_shopping';
 
-// Use fetch-based Telegram API (no package needed!)
 const BASE_URL = `https://api.telegram.org/bot${BOT_TOKEN}`;
 let lastUpdateId = 0;
 
@@ -60,7 +59,7 @@ function handleUpdate(update) {
 
         if (text === '/start') {
             sendMessage(chatId,
-                `💎 *Welcome to GEMAX Store, ${username}!*\n\n✨ Quality to the Max\n🛍️ Bags, Clothes, Jewelry, Perfumes & more\n💳 Pay easily with Telebirr\n\n👇 Click below to start shopping:`,
+                `💎 *Welcome to GEMAX Store, ${username}!*\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ${CHANNEL}\n\n👇 Start shopping:`,
                 {
                     parse_mode: 'Markdown',
                     reply_markup: {
@@ -73,7 +72,7 @@ function handleUpdate(update) {
             );
         } else if (text === '/help') {
             sendMessage(chatId,
-                `💎 *GEMAX Store Help*\n\n✨ Quality to the Max\n\n🛍️ *How to Shop:*\n• Click OPEN GEMAX STORE\n• Browse by category\n• Add to cart\n• Place order\n\n💳 *Payment:* Telebirr\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n📞 Support: @${SUPPORT_USERNAME}`,
+                `💎 *GEMAX Store Help*\n\n✨ Quality to the Max\n\n🛍️ *How to Order:*\n• Click OPEN GEMAX STORE\n• Browse products\n• Add to cart\n• Place order\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr to confirm\n🤝 Meetup after payment\n\n💳 *Payment:*\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n📞 Support: @${SUPPORT_USERNAME}\n📢 Channel: ${CHANNEL}`,
                 {
                     parse_mode: 'Markdown',
                     reply_markup: {
@@ -86,25 +85,23 @@ function handleUpdate(update) {
         }
     }
 
-    // Handle web_app_data
+    // ORDER NOTIFICATIONS
     if (update.message?.web_app_data) {
         try {
             const data = JSON.parse(update.message.web_app_data.data);
             if (data.type === 'new_order') {
                 const order = data.order;
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const ts = order.timestamp || new Date().toLocaleString();
 
-                // Notify Admin
+                // Notify Admin (YOU)
                 sendMessage(ADMIN_ID,
-                    `🔔 *NEW ORDER!*\n\n🆔 #${order.id}\n👤 ${order.customer_username}\n📱 ID: \`${order.customer_id}\`\n\n📦 *Items:*\n${order.items.map(i => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} Birr`).join('\n')}\n\n💰 *Total: ${order.total} Birr*\n\n🕐 ${timeStr}, ${dateStr}\n\n💳 Telebirr: ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n⏳ Status: Pending`,
+                    `🔔 *NEW ORDER!*\n\n🆔 #${order.id}\n👤 ${order.customer_username}\n📱 ID: \`${order.customer_id}\`\n\n📦 *Items:*\n${order.items.map(i => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} Birr`).join('\n')}\n\n💰 *Total: ${order.total} Birr*\n\n🕐 ${ts}\n\n⏱️ Processing: 15-25 days\n💳 Telebirr: ${PAYMENT_PHONE} (${PAYMENT_NAME})\n\n⏳ Status: Pending`,
                     { parse_mode: 'Markdown' }
                 );
 
-                // Notify Customer
+                // Confirm to Customer
                 sendMessage(update.message.chat.id,
-                    `✅ *Order Confirmed!*\n\nOrder #${order.id}\nTotal: ${order.total} Birr\n\n💳 *Pay via Telebirr:*\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n\n📞 Support: @${SUPPORT_USERNAME}\n\nThank you for shopping with GEMAX Store! ✨`,
+                    `✅ *Order Confirmed!*\n\n🆔 #${order.id}\n💰 Total: ${order.total} Birr\n🕐 ${ts}\n\n⏱️ Processing: 15-25 days\n💳 Pay via Telebirr to confirm:\n📱 ${PAYMENT_PHONE}\n👤 ${PAYMENT_NAME}\n🤝 Meetup after payment\n\n📞 Questions? @${SUPPORT_USERNAME}\n📢 Channel: ${CHANNEL}\n\nThank you for shopping with GEMAX Store! ✨`,
                     { parse_mode: 'Markdown' }
                 );
 
@@ -120,3 +117,4 @@ console.log('🤖 GEMAX Bot starting...');
 getUpdates();
 console.log('✅ GEMAX Store Bot ready!');
 console.log('💎 Quality to the Max');
+console.log('🔔 Order notifications: ON');
