@@ -3,10 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end('<h1>💎 GEMAX Store Bot Running</h1>');
-}).listen(PORT, () => console.log('🌐 Web server on port ' + PORT));
+http.createServer((req, res) => { res.writeHead(200, {'Content-Type':'text/html'}); res.end('<h1>💎 GEMAX Store Bot Running</h1>'); }).listen(PORT, () => console.log('🌐 Web server on port ' + PORT));
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '8798527679:AAGsF2R0m_iV_ThurVTf2CN9VecoCAV2rcU';
 const ADMIN_ID = 7715442708;
@@ -16,7 +13,6 @@ const PAYMENT_PHONE = '+251990066832';
 const PAYMENT_NAME = 'Biruk';
 const SUPPORT_USERNAME = 'gem_core';
 const CHANNEL = '@Gemax_shopping';
-
 const BASE_URL = 'https://api.telegram.org/bot' + BOT_TOKEN;
 let lastUpdateId = 0;
 
@@ -35,12 +31,7 @@ async function getUpdates() {
     try {
         const res = await fetch(BASE_URL + '/getUpdates?offset=' + (lastUpdateId + 1) + '&timeout=10');
         const data = await res.json();
-        if (data.ok && data.result.length > 0) {
-            for (const update of data.result) {
-                lastUpdateId = update.update_id;
-                handleUpdate(update);
-            }
-        }
+        if (data.ok && data.result.length > 0) { for (const update of data.result) { lastUpdateId = update.update_id; handleUpdate(update); } }
     } catch (e) { console.error('Polling error:', e.message) }
     setTimeout(getUpdates, 500);
 }
@@ -51,14 +42,10 @@ async function checkNewOrders() {
         const orders = await res.json();
         for (const order of orders) {
             if (!notifiedOrders.has(order.id)) {
-                notifiedOrders.add(order.id);
-                saveNotified();
+                notifiedOrders.add(order.id); saveNotified();
                 var itemsList = '';
-                for (var i = 0; i < order.items.length; i++) {
-                    var item = order.items[i];
-                    itemsList += '• ' + item.name + ' ×' + item.quantity + ' = ' + (item.price * item.quantity) + ' Birr\n';
-                }
-                var adminMsg = '🔔 NEW ORDER!\n\n🆔 #' + order.id + '\n👤 ' + order.customer_username + '\n📱 ID: ' + order.customer_id + '\n\n📦 Items:\n' + itemsList + '\n💰 Total: ' + order.total + ' Birr\n\n🕐 ' + (order.timestamp || 'Just now') + '\n\n⏱️ Processing: 15-30 days\n💳 Telebirr: ' + PAYMENT_PHONE + ' (' + PAYMENT_NAME + ')\n\n⏳ Status: Pending';
+                for (var i = 0; i < order.items.length; i++) { var item = order.items[i]; itemsList += '• ' + item.name + ' ×' + item.quantity + ' = ' + (item.price * item.quantity) + ' Birr\n'; }
+                var adminMsg = '🔔 NEW ORDER!\n\n🆔 #' + order.id + '\n👤 ' + order.customer_username + '\n📱 ID: ' + order.customer_id + '\n\n📦 Items:\n' + itemsList + '\n💰 Total: ' + order.total + ' Birr\n\n🕐 ' + (order.timestamp || 'Just now') + '\n\n⏱️ Arrival: 15-30 days\n💳 Telebirr: ' + PAYMENT_PHONE + ' (' + PAYMENT_NAME + ')\n\n⏳ Status: Pending';
                 await sendMessage(ADMIN_ID, adminMsg);
                 console.log('✅ Admin notified for order ' + order.id);
             }
@@ -80,37 +67,27 @@ async function sendMessage(chatId, text, opts) {
 
 async function handleUpdate(update) {
     if (update.message) {
-        var msg = update.message;
-        var chatId = msg.chat.id;
-        var text = msg.text || '';
+        var msg = update.message; var chatId = msg.chat.id; var text = msg.text || '';
         var username = msg.from && msg.from.username ? '@' + msg.from.username : 'Customer';
         var userId = msg.from && msg.from.id;
         if (userId) { userIds.add(userId); saveUsers() }
-
         if (text === '/start' || text === '/Start' || text === 'start') {
-            var welcomeMsg = '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Processing: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:';
-            sendMessage(chatId, welcomeMsg, { reply_markup: { inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]] } });
+            sendMessage(chatId, '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:', { reply_markup: { inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]] } });
             return;
         }
         if (text === '/help' || text === '/Help' || text === 'help') {
-            var helpMsg = '💎 GEMAX Store Help\n\n✨ Quality to the Max\n\n🛍️ How to Order:\n• Click OPEN GEMAX STORE\n• Browse 50+ products\n• Add to cart\n• Place order\n\n⏱️ Processing: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n💳 Payment:\n📱 ' + PAYMENT_PHONE + '\n👤 ' + PAYMENT_NAME + '\n\n📞 Support: @' + SUPPORT_USERNAME + '\n📢 Channel: ' + CHANNEL;
-            sendMessage(chatId, helpMsg, { reply_markup: { inline_keyboard: [[{ text: '🛒 START SHOPPING', web_app: { url: MINI_APP_URL } }]] } });
+            sendMessage(chatId, '💎 GEMAX Store Help\n\n✨ Quality to the Max\n\n🛍️ How to Order:\n• Click OPEN GEMAX STORE\n• Browse 50+ products\n• Add to cart\n• Place order\n\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n💳 Payment:\n📱 ' + PAYMENT_PHONE + '\n👤 ' + PAYMENT_NAME + '\n\n📞 Support: @' + SUPPORT_USERNAME + '\n📢 Channel: ' + CHANNEL, { reply_markup: { inline_keyboard: [[{ text: '🛒 START SHOPPING', web_app: { url: MINI_APP_URL } }]] } });
             return;
         }
         if (text.startsWith('/broadcast ') && String(userId) === String(ADMIN_ID)) {
-            var broadcastMsg = text.replace('/broadcast ', '');
-            var sent = 0;
-            for (var uid of userIds) { try { var ok = await sendMessage(uid, '📢 GEMAX Store\n\n' + broadcastMsg); if (ok) sent++; await new Promise(r => setTimeout(r, 200)); } catch(e) {} }
-            sendMessage(chatId, '✅ Broadcast sent to ' + sent + '/' + userIds.size + ' users!');
-            return;
+            var bm = text.replace('/broadcast ', ''); var sent = 0;
+            for (var uid of userIds) { try { var ok = await sendMessage(uid, '📢 GEMAX Store\n\n' + bm); if (ok) sent++; await new Promise(r => setTimeout(r, 200)); } catch(e) {} }
+            sendMessage(chatId, '✅ Broadcast sent to ' + sent + '/' + userIds.size + ' users!'); return;
         }
         if (msg.photo && String(userId) === String(ADMIN_ID)) {
-            var caption = msg.caption || '';
-            var fileId = msg.photo[msg.photo.length - 1].file_id;
-            var sent = 0;
-            for (var uid of userIds) { try { var body = { chat_id: uid, photo: fileId, caption: caption ? '📢 GEMAX Store\n\n' + caption : '📢 GEMAX Store' }; var r = await fetch(BASE_URL + '/sendPhoto', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); if ((await r.json()).ok) sent++; await new Promise(r => setTimeout(r, 300)); } catch(e) {} }
-            sendMessage(chatId, '✅ Photo sent to ' + sent + '/' + userIds.size + ' users!');
-            return;
+            var cap = msg.caption || ''; var fid = msg.photo[msg.photo.length - 1].file_id; var sent = 0;
+            for (var uid of userIds) { try { var r = await fetch(BASE_URL + '/sendPhoto', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: uid, photo: fid, caption: cap ? '📢 GEMAX Store\n\n' + cap : '📢 GEMAX Store' }) }); if ((await r.json()).ok) sent++; await new Promise(r => setTimeout(r, 300)); } catch(e) {} }
+            sendMessage(chatId, '✅ Photo sent to ' + sent + '/' + userIds.size + ' users!'); return;
         }
         if (text === '/count' && String(userId) === String(ADMIN_ID)) { sendMessage(chatId, '📊 Total bot users: ' + userIds.size); return; }
     }
@@ -119,5 +96,4 @@ async function handleUpdate(update) {
 console.log('🤖 GEMAX Bot starting...');
 getUpdates();
 checkNewOrders();
-console.log('✅ GEMAX Store Bot ready!');
-console.log('📦 50 products | 🔔 Notifications: ON | 📢 Broadcast: ON');
+console.log('✅ GEMAX Store Bot ready! 📦 50 products | 🔔 Notifications ON | 📢 Broadcast ON');
