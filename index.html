@@ -7,8 +7,7 @@
     <style>
         :root{--bg:#F9F6F0;--c:#FFFFFF;--t:#1C1C1C;--ts:#666;--a:#AA7C11;--g:#AA7C11;--gg:linear-gradient(135deg,#AA7C11,#D4AF37,#AA7C11);--bad:#dc2626;--pb:#AA7C11;--sb:rgba(170,124,17,0.05);--ib:#f5f1e8;--da:#ef4444;--su:#10b981;--or:#f59e0b;--bl:#3b82f6;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
         body.theme-obsidian{--bg:#121212;--c:#1a1a1a;--t:#FFF;--ts:#a0a0a0;--a:#E5C158;--g:#E5C158;--gg:linear-gradient(135deg,#E5C158,#F3D673,#E5C158);--pb:#E5C158;--sb:rgba(229,193,88,0.08);--ib:#1e1e1e}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{background:var(--bg);color:var(--t);min-height:100vh;padding-bottom:80px}
+        *{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--t);min-height:100vh;padding-bottom:80px}
         .hdr{background:var(--bg);padding:14px 20px;position:sticky;top:0;z-index:100;border-bottom:2px solid var(--pb);display:flex;align-items:center;justify-content:space-between}
         .logo{width:38px;height:38px;background:var(--gg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#1a1a1a}
         .sn{font-weight:800;font-size:18px;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -26,8 +25,7 @@
         .pc{background:var(--c);border-radius:16px;overflow:hidden;cursor:pointer;border:1px solid var(--pb);position:relative}
         .pc:active{transform:scale(0.98)}.pi{width:100%;height:160px;object-fit:cover}
         .wbtn{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.4);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3}
-        .wbtn.liked{background:var(--gg);color:#1a1a1a}
-        .pinfo{padding:10px}.pn{font-weight:600;font-size:13px}.pp{font-weight:700;font-size:15px;color:var(--g)}
+        .wbtn.liked{background:var(--gg);color:#1a1a1a}.pinfo{padding:10px}.pn{font-weight:600;font-size:13px}.pp{font-weight:700;font-size:15px;color:var(--g)}
         .btn{padding:10px 18px;border-radius:12px;border:none;font-size:13px;font-weight:600;cursor:pointer}
         .btn-p{background:var(--gg);color:#1a1a1a}.btn-s{background:var(--ib);color:var(--t);border:1px solid var(--pb)}.btn-d{background:var(--da);color:#fff}.btn-g{background:var(--su);color:#fff}.btn-b{background:var(--bl);color:#fff}
         .btn-sm{padding:7px 12px;font-size:11px;border-radius:10px}.btn-xs{padding:3px 8px;font-size:9px;border-radius:7px}
@@ -46,21 +44,19 @@
         .mo{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:flex-end;justify-content:center}
         .mo.active{display:flex}.ms{background:var(--c);width:100%;max-width:500px;border-radius:22px 22px 0 0;max-height:85vh;overflow-y:auto;padding-bottom:20px;border-top:3px solid var(--g);animation:slideUp 0.3s}
         @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-        .mg{display:flex;overflow-x:auto}.mg img{width:100%;max-height:300px;object-fit:cover;flex-shrink:0}
-        .mc{padding:16px}.ma{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+        .mg{display:flex;overflow-x:auto}.mg img{width:100%;max-height:300px;object-fit:cover;flex-shrink:0}.mc{padding:16px}.ma{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
         .ao{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;display:none;align-items:center;justify-content:center}
         .ao.active{display:flex}.ap{background:var(--c);border-radius:18px;width:95%;max-width:900px;max-height:85vh;overflow-y:auto;padding:18px;border:2px solid var(--pb)}
         .ah{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--pb)}
         .at{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
         .atb{padding:7px 12px;border-radius:16px;border:1px solid var(--pb);background:var(--c);cursor:pointer;font-size:11px;color:var(--ts)}
-        .atb.active{background:var(--gg);color:#1a1a1a;font-weight:700}
-        .asec{display:none}.asec.active{display:block}
+        .atb.active{background:var(--gg);color:#1a1a1a;font-weight:700}.asec{display:none}.asec.active{display:block}
         .fg{margin-bottom:12px}.fg label{display:block;font-weight:600;margin-bottom:3px;font-size:11px;color:var(--g)}
         .fg input,.fg textarea,.fg select{width:100%;padding:9px 12px;border-radius:10px;border:2px solid var(--pb);background:var(--ib);font-size:12px;color:var(--t);outline:none}
         .fg textarea{min-height:50px;resize:vertical}.fr{display:flex;gap:8px;flex-wrap:wrap}.fr .fg{flex:1;min-width:100px}
         .fua{border:2px dashed var(--pb);border-radius:12px;padding:18px;text-align:center;cursor:pointer;margin-bottom:10px;background:var(--sb);color:var(--ts)}
-        .pt{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-        .pti{position:relative;width:55px;height:55px}.pti img{width:55px;height:55px;border-radius:8px;object-fit:cover;border:2px solid var(--pb)}
+        .pt{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.pti{position:relative;width:55px;height:55px}
+        .pti img{width:55px;height:55px;border-radius:8px;object-fit:cover;border:2px solid var(--pb)}
         .rt{position:absolute;top:-5px;right:-5px;background:var(--da);color:#fff;border:none;width:20px;height:20px;border-radius:50%;font-size:10px;cursor:pointer}
         .api{display:flex;align-items:center;gap:8px;padding:10px;background:var(--c);border-radius:12px;margin-bottom:6px;flex-wrap:wrap;border:1px solid var(--pb);font-size:11px}
         .api img{width:45px;height:45px;border-radius:8px;object-fit:cover}.apii{flex:1;min-width:100px}
@@ -74,63 +70,37 @@
         .to2{padding:10px 14px;border-radius:12px;margin-bottom:5px;cursor:pointer;border:2px solid var(--pb);font-weight:600;font-size:12px;color:var(--t)}
         .to2.selected{border-color:var(--g);background:var(--sb)}
         .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;border:1px solid var(--pb)}.toast.show{opacity:1}
-        .es{text-align:center;padding:40px 20px;color:var(--ts)}.es .ic2{font-size:40px;margin-bottom:10px;display:block}
-        hr{border:none;border-top:1px solid var(--pb);margin:14px 0}
+        .es{text-align:center;padding:40px 20px;color:var(--ts)}.es .ic2{font-size:40px;margin-bottom:10px;display:block}hr{border:none;border-top:1px solid var(--pb);margin:14px 0}
     </style>
 </head>
 <body>
 <div id="loadingBar" style="position:fixed;top:0;left:0;height:3px;background:var(--gg);z-index:9999;width:0;transition:width 0.3s"></div>
-
 <div class="hdr"><div><span class="logo">💎</span><span class="sn">GEMAX</span></div><div><button class="btn btn-sm btn-s" id="abtn" style="display:none">⚙️</button></div></div>
 <div class="ub"><span id="ug">👤 Welcome</span></div>
 <div class="sbar"><span>🔍</span><input type="text" id="si" placeholder="Search..."></div>
-
 <div class="sec active" id="sec-home"><div class="cats" id="ctabs"></div><div class="gf" id="gfilt"></div><p style="padding:10px 20px;font-weight:700;color:var(--g)">✦ Products · ⏱️ 15-30 days</p><div class="pg" id="pgrid"><div class="es"><span class="ic2">⏳</span><p>Loading products...</p></div></div></div>
 <div class="sec" id="sec-cart"><p style="padding:14px 20px;font-weight:700;color:var(--g)">🛒 Your Cart</p><p style="padding:0 20px;font-size:10px;color:var(--ts)">⏱️ Arrival: 15-30 days after order</p><div id="citems"></div><div class="ct" id="ctot" style="display:none"><span>Total</span><span id="tpr">0</span></div><button class="btn btn-p" id="cobtn" style="display:none;margin:0 20px;width:calc(100% - 40px)">✦ Place Order</button><div class="es" id="cempty"><span class="ic2">🛒</span><p>Your cart is empty</p></div></div>
 <div class="sec" id="sec-wish"><p style="padding:14px 20px;font-weight:700;color:var(--g)">❤️ Your Wishlist</p><div class="pg" id="wgrid"></div><div class="es" id="wempty"><span class="ic2">💎</span><p>No favorites yet</p></div></div>
 <div class="sec" id="sec-orders"><p style="padding:14px 20px;font-weight:700;color:var(--g)">📋 Your Orders</p><div id="olist" style="padding:0 20px"></div><div class="es" id="oempty"><span class="ic2">📦</span><p>No orders yet</p></div></div>
-
 <div class="bn"><button class="ni active" data-sec="home"><span class="ic">🏠</span>Home</button><button class="ni" data-sec="cart"><span class="ic">🛒</span><span id="cBadge" style="background:var(--bad);color:#fff;font-size:8px;padding:1px 5px;border-radius:6px;display:none">0</span> Cart</button><button class="ni" data-sec="wish"><span class="ic">❤️</span>Wish</button><button class="ni" data-sec="orders"><span class="ic">📋</span>Orders</button></div>
-
 <button class="menu-btn" id="menuBtn">☰</button>
-
 <div class="mo" id="pModal"><div class="ms"><button class="btn btn-sm btn-s" style="position:sticky;top:10px;float:right;margin:10px;z-index:10" id="cmBtn">✕</button><div class="mg" id="mGal"></div><div class="mc"><p id="mCat" style="font-size:9px;color:var(--ts)"></p><h2 id="mName" style="font-size:18px;margin:3px 0"></h2><p id="mPrice" style="font-size:18px;color:var(--g)"></p><p id="mDesc" style="color:var(--ts);margin:8px 0;font-size:12px"></p><p style="color:var(--g);font-size:11px">⏱️ 15-30 days</p><div class="ma"><button class="btn btn-p" id="mAdd">Add to Cart</button><button class="btn btn-g" id="mBuy">Buy Now</button></div><button class="btn btn-s" style="width:100%;margin-top:6px" id="mBack">← Continue Shopping</button></div></div></div>
-
-<div class="tp" id="tPopup"><div class="tc"><h3 style="margin-bottom:14px;color:var(--g)">☰ Menu</h3>
-<p style="font-weight:700;color:var(--g);margin-bottom:6px">🎨 Theme</p>
-<div class="to2 selected" data-theme="ivory">🤍 Ivory (Light)</div>
-<div class="to2" data-theme="obsidian">🌑 Obsidian (Dark)</div>
-<p style="font-weight:700;color:var(--g);margin-bottom:6px;margin-top:10px">🌐 Language / ቋንቋ</p>
-<div class="to2" data-lang="en">🇺🇸 English</div>
-<div class="to2" data-lang="am">🇪🇹 አማርኛ</div>
-<button class="btn btn-s" style="width:100%;margin-top:10px" id="shareBtn2">📤 Share GEMAX Store</button>
-<button class="btn btn-p" style="width:100%;margin-top:6px" id="ctBtn">✅ Close</button>
-</div></div>
-
-<div class="ao" id="aOverlay"><div class="ap"><div class="ah"><h2 style="color:var(--g)">⚙️ Admin</h2><button class="btn btn-sm btn-d" id="caBtn">✕</button></div><div class="at"><button class="atb active" data-atab="dash">Dashboard</button><button class="atb" data-atab="prods">Products</button><button class="atb" data-atab="ords">Orders</button></div>
-<div class="asec active" id="a-dash"><div class="sg" id="dStats"></div></div>
-<div class="asec" id="a-prods"><div class="fg"><label>Name *</label><input id="apn"></div><div class="fr"><div class="fg"><label>Category</label><select id="apc"></select></div><div class="fg"><label>Gender</label><select id="apg"><option>Male</option><option>Female</option><option>Unisex</option></select></div></div><div class="fr"><div class="fg"><label>Price (Birr) *</label><input type="number" id="app"></div></div><div class="fg"><label>Description</label><textarea id="apd"></textarea></div><div class="fg"><label>📷 Photos (max 3)</label><div class="fua" id="pdz"><p>📷 Click to upload</p></div><input type="file" id="api2" accept="image/*" multiple style="display:none"><div class="pt" id="ppv"></div></div><button class="btn btn-p" id="apBtn">➕ Add Product</button><hr><h4 style="color:var(--g)">📁 Categories</h4><div class="fr"><div class="fg"><input id="ncn" placeholder="New category"></div><button class="btn btn-p" id="acBtn">➕ Add</button></div><div id="clist"></div><hr><h4 style="color:var(--g)">📦 Manage Products</h4><div id="aplist"></div></div>
-<div class="asec" id="a-ords"><div id="aolist"></div></div></div></div>
+<div class="tp" id="tPopup"><div class="tc"><h3 style="margin-bottom:14px;color:var(--g)">☰ Menu</h3><p style="font-weight:700;color:var(--g);margin-bottom:6px">🎨 Theme</p><div class="to2 selected" data-theme="ivory">🤍 Ivory (Light)</div><div class="to2" data-theme="obsidian">🌑 Obsidian (Dark)</div><p style="font-weight:700;color:var(--g);margin-bottom:6px;margin-top:10px">🌐 Language / ቋንቋ</p><div class="to2" data-lang="en">🇺🇸 English</div><div class="to2" data-lang="am">🇪🇹 አማርኛ</div><button class="btn btn-s" style="width:100%;margin-top:10px" id="shareBtn2">📤 Share GEMAX Store</button><button class="btn btn-p" style="width:100%;margin-top:6px" id="ctBtn">✅ Close</button></div></div>
+<div class="ao" id="aOverlay"><div class="ap"><div class="ah"><h2 style="color:var(--g)">⚙️ Admin</h2><button class="btn btn-sm btn-d" id="caBtn">✕</button></div><div class="at"><button class="atb active" data-atab="dash">Dashboard</button><button class="atb" data-atab="prods">Products</button><button class="atb" data-atab="ords">Orders</button></div><div class="asec active" id="a-dash"><div class="sg" id="dStats"></div></div><div class="asec" id="a-prods"><div class="fg"><label>Name *</label><input id="apn"></div><div class="fr"><div class="fg"><label>Category</label><select id="apc"></select></div><div class="fg"><label>Gender</label><select id="apg"><option>Male</option><option>Female</option><option>Unisex</option></select></div></div><div class="fr"><div class="fg"><label>Price (Birr) *</label><input type="number" id="app"></div></div><div class="fg"><label>Description</label><textarea id="apd"></textarea></div><div class="fg"><label>📷 Photos (max 3)</label><div class="fua" id="pdz"><p>📷 Click to upload</p></div><input type="file" id="api2" accept="image/*" multiple style="display:none"><div class="pt" id="ppv"></div></div><button class="btn btn-p" id="apBtn">➕ Add Product</button><hr><h4 style="color:var(--g)">📁 Categories</h4><div class="fr"><div class="fg"><input id="ncn" placeholder="New category"></div><button class="btn btn-p" id="acBtn">➕ Add</button></div><div id="clist"></div><hr><h4 style="color:var(--g)">📦 Manage Products</h4><div id="aplist"></div></div><div class="asec" id="a-ords"><div id="aolist"></div></div></div></div>
 <div class="toast" id="toast"></div>
-
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
-var API='https://gemax-backend.onrender.com',AD=[7715442708],PH='+251990066832',PN='Biruk',SU='gem_core',CH='@Gemax_shopping';
+(function(){
+var API='https://gemax-backend.onrender.com',AD=[7715442708],PH='+251990066832',PN='Biruk',SU='gem_core';
 var P=[],C=[],W=[],O=[],CAT=['Bags','Clothes','Jewelry','Electronics','Shoes','Watches','Others'];
 var U={n:'',u:'',phone:'',tid:null,isAdmin:false},theme='ivory',lang='en',isAO=false,cat='All',gen='All',pP=[],aT=null,cM=null;
-
-var T={
-en:{home:"Home",cart:"Cart",wish:"Wish",orders:"Orders",search:"Search...",loading:"Loading products...",noProducts:"No products available",emptyCart:"Your cart is empty",emptyWish:"No favorites yet",emptyOrders:"No orders yet",addToCart:"Add to Cart",buyNow:"Buy Now",continueShopping:"← Continue Shopping",welcome:"Welcome",phonePrompt:"📱 Your phone number:",phoneRequired:"⚠️ Required!",orderPlaced:"✅ Order placed!",orderFailed:"❌ Failed",networkError:"❌ Network error",all:"All",male:"Male",female:"Female",unisex:"Unisex",adminPass:"🔐 Admin password:",adminWrong:"❌ Wrong!",adminWelcome:"🔐 Welcome!",adminUnauth:"❌ Unauthorized",added:"Added!"},
-am:{home:"መነሻ",cart:"የግዢ ጋሪ",wish:"ተወዳጆች",orders:"ትዛዛቦች",search:"ፈልግ...",loading:"ምርቶች በመጫን ላይ...",noProducts:"ምርቶች የሉም",emptyCart:"ጋሪዎ ባዶ ነው",emptyWish:"እስካሁን ተወዳጆች የሉም",emptyOrders:"እስካሁን ትዛዛቦች የሉም",addToCart:"ወደ ጋሪ ጨምር",buyNow:"አሁን ግዛ",continueShopping:"← መግዛት ቀጥል",welcome:"እንኳን ደህና መጡ",phonePrompt:"📱 ስልክ ቁጥርዎ:",phoneRequired:"⚠️ ያስፈልጋል!",orderPlaced:"✅ ትዛዝ ገብቷል!",orderFailed:"❌ አልተሳካም",networkError:"❌ የአውታረ መረብ ችግር",all:"ሁሉም",male:"ወንድ",female:"ሴት",unisex:"ሁለቱም",adminPass:"🔐 የአስተዳዳሪ ይለፍ ቃል:",adminWrong:"❌ የተሳሳተ!",adminWelcome:"🔐 እንኳን ደህና መጡ!",adminUnauth:"❌ አልተፈቀደም",added:"ተጨምሯል!"}
-};
-
+var T={en:{home:"Home",cart:"Cart",wish:"Wish",orders:"Orders",search:"Search...",loading:"Loading products...",noProducts:"No products available",emptyCart:"Your cart is empty",emptyWish:"No favorites yet",emptyOrders:"No orders yet",addToCart:"Add to Cart",buyNow:"Buy Now",continueShopping:"← Continue Shopping",welcome:"Welcome",phonePrompt:"📱 Your phone number:",phoneRequired:"⚠️ Required!",orderPlaced:"✅ Order placed!",orderFailed:"❌ Failed",networkError:"❌ Network error",all:"All",male:"Male",female:"Female",unisex:"Unisex",added:"Added!"},am:{home:"መነሻ",cart:"የግዢ ጋሪ",wish:"ተወዳጆች",orders:"ትዛዛቦች",search:"ፈልግ...",loading:"ምርቶች በመጫን ላይ...",noProducts:"ምርቶች የሉም",emptyCart:"ጋሪዎ ባዶ ነው",emptyWish:"እስካሁን ተወዳጆች የሉም",emptyOrders:"እስካሁን ትዛዛቦች የሉም",addToCart:"ወደ ጋሪ ጨምር",buyNow:"አሁን ግዛ",continueShopping:"← መግዛት ቀጥል",welcome:"እንኳን ደህና መጡ",phonePrompt:"📱 ስልክ ቁጥርዎ:",phoneRequired:"⚠️ ያስፈልጋል!",orderPlaced:"✅ ትዛዝ ገብቷል!",orderFailed:"❌ አልተሳካም",networkError:"❌ የአውታረ መረብ ችግር",all:"ሁሉም",male:"ወንድ",female:"ሴት",unisex:"ሁለቱም",added:"ተጨምሯል!"}};
 var AmNames={"JBL tune 510BT":"JBL tune 510BT የጆሮ ማዳምጫ","Apex magnetic chess":"አፕክስ ማግኔቲክ ቼዝ","Nike Vapor 12 Mercurial soccer cleats":"ናይክ ቫፖር 12 ሜርኩሪያል እግር ኳስ ጫማ","Pablo Raez men watch":"ፓብሎ ራኤዝ የወንድ የእጅ ሰዓት","Purse":"የሴት ቦርሳ","Short sleeve crew neck T-shirt":"አጭር እጅምበር ቲሸርት","Geneva men watch":"ጄኔቫ የወንድ የእጅ ሰዓት","Watch":"የወንድ የእጅ ሰዓት","Hand bag for women":"የሴት የእጅ ቦርሳ","Tote bag for women":"የሴት ቶት ቦርሳ","Necklace and earrings":"የአንገት ሀብል እና የጆሮ ጌጦች","Earrings":"የጆሮ ጌጦች","Pablo raez men watch":"ፓብሎ ራኤዝ የወንድ የእጅ ሰዓት","Hand fan":"የእጅ ማራገቢያ","Women knight wear":"የሴቶች የመኝታ ልብስ","Men watch":"የወንድ የእጅ ሰዓት","Earrings and necklace":"የጆሮ ጌጦች እና የአንገት ሀብል","Bag for women":"የሴት ቦርሳ","Bracelet set":"የአምባር ስብስብ","Phone case":"የስልክ መያዣ","GRVTY Visions beany":"GRVTY Visions ቢኒ ኮፍያ","Women's bag":"የሴት ቦርሳ","Hair clip":"የፀጉር መቆንጠጫ","Sweat pants":"ቱታ ሱሪ","Men's watch":"የወንድ የእጅ ሰዓት","Men's Jewelry set":"የወንድ ጌጣጌጥ ስብስብ","Bracelet":"አምባር","Women's watch and jewelry set":"የሴት የእጅ ሰዓት እና ጌጣጌጥ ስብስብ","Women's watch":"የሴት የእጅ ሰዓት","Women's jewelry set":"የሴት ጌጣጌጥ ስብስብ","2pcs of men watch":"2 የወንድ የእጅ ሰዓት","Eyelash curler":"Eyelash curler","Foam Clogs (Crocs)":"ነጠላ ጫማ","Belt":"ቀበቶ"};
 
 function t(k){return (T[lang]&&T[lang][k])?T[lang][k]:k}
 function tn(n){return (lang==='am'&&AmNames[n])?AmNames[n]:n}
 function tcat(c){var kl=c.toLowerCase();return (lang==='am'&&T.am[kl])?T.am[kl]:c}
 function tgen(g){var kl=g.toLowerCase();return (lang==='am'&&T.am[kl])?T.am[kl]:g}
-
 function toast(m){var el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},2500)}
 function fP(id){return P.find(function(p){return p.id===id})}
 function gImg(p){if(!p||!p.images||!p.images.length)return'https://placehold.co/400x400/AA7C11/F9F6F0?text=No+Image';var i=p.images[0];return i.startsWith('http')||i.startsWith('data:')?i:API+'/static/'+i}
@@ -140,7 +110,7 @@ function load(k,d){var v=localStorage.getItem(getK(k));return v?JSON.parse(v):d}
 function showLoading(){document.getElementById('loadingBar').style.width='100%'}
 function hideLoading(){setTimeout(function(){document.getElementById('loadingBar').style.width='0%'},300)}
 function detectUser(){if(window.Telegram&&window.Telegram.WebApp){try{var tg=window.Telegram.WebApp;tg.ready();var u=tg.initDataUnsafe?tg.initDataUnsafe.user:null;if(u){U.tid=u.id;U.n=u.first_name+(u.last_name?' '+u.last_name:'');U.u=u.username?'@'+u.username:'';U.isAdmin=AD.indexOf(u.id)!==-1;save('user',U);return true}}catch(e){}}var s=load('user',{});if(s.tid)U=s;U.phone=load('phone','');return!!U.tid}
-function uUB(){var g=document.getElementById('ug');g.textContent=(U.u||U.n||t('welcome'))+(U.isAdmin?' 🔐':'');document.getElementById('abtn').style.display=U.isAdmin?'inline-block':'none'}
+function uUB(){document.getElementById('ug').textContent=(U.u||U.n||t('welcome'))+(U.isAdmin?' 🔐':'');document.getElementById('abtn').style.display=U.isAdmin?'inline-block':'none'}
 
 function rP(){var s=document.getElementById('si').value.toLowerCase();var f=P.filter(function(p){if(p.is_hidden)return false;if(cat!=='All'&&p.category!==cat)return false;if(gen!=='All'&&p.gender!==gen)return false;if(s){var en=p.name.toLowerCase();var am=(AmNames[p.name]||'').toLowerCase();if(en.indexOf(s)===-1&&am.indexOf(s)===-1)return false}return true});var h='';f.forEach(function(p){var lk=W.indexOf(p.id)!==-1;var dn=tn(p.name);h+='<div class="pc" data-pid="'+p.id+'"><img src="'+gImg(p)+'" class="pi" onerror="this.src=\'https://placehold.co/400x400/AA7C11/F9F6F0?text=Image\'"><button class="wbtn'+(lk?' liked':'')+'" data-wid="'+p.id+'">'+(lk?'❤️':'🤍')+'</button><div class="pinfo"><p style="font-size:9px;color:var(--ts)">'+tcat(p.category)+' · '+tgen(p.gender)+'</p><p class="pn">'+dn+'</p><p class="pp">'+p.price.toLocaleString()+' Birr</p><p style="font-size:9px;color:var(--ts)">⏱️15-30 '+(lang==='am'?'ቀናት':'days')+'</p></div></div>'});document.getElementById('pgrid').innerHTML=h||'<div class="es"><span class="ic2">💎</span><p>'+t('noProducts')+'</p></div>';document.querySelectorAll('#pgrid .pc').forEach(function(cd){cd.onclick=function(e){if(e.target.classList.contains('wbtn'))return;var p=fP(parseInt(this.dataset.pid));if(p)oP(p.id)}});document.querySelectorAll('#pgrid .wbtn').forEach(function(btn){btn.onclick=function(e){e.stopPropagation();tW(parseInt(this.dataset.wid))}})}
 function rW(){var it=P.filter(function(p){return W.indexOf(p.id)!==-1});document.getElementById('wgrid').innerHTML=it.length?it.map(function(p){return'<div class="pc"><img src="'+gImg(p)+'" class="pi"><div class="pinfo"><p style="font-size:9px;color:var(--ts)">'+tcat(p.category)+' · '+tgen(p.gender)+'</p><p class="pn">'+tn(p.name)+'</p><p class="pp">'+p.price.toLocaleString()+' Birr</p></div></div>'}).join(''):'';document.getElementById('wempty').style.display=it.length?'none':'block'}
@@ -158,7 +128,7 @@ function rO(){var mo=O.filter(function(o){if(U.tid&&String(o.customer_id)===Stri
 function swS(s){document.querySelectorAll('.sec').forEach(function(e){e.classList.remove('active')});document.querySelectorAll('.ni').forEach(function(e){e.classList.remove('active')});document.getElementById('sec-'+s).classList.add('active');var n=document.querySelector('[data-sec="'+s+'"]');if(n)n.classList.add('active');if(s==='cart')rC();if(s==='wish')rW();if(s==='home')rP();if(s==='orders'){showLoading();lO();setTimeout(hideLoading,800)}}
 function lP(){showLoading();fetch(API+'/api/products').then(function(r){return r.json()}).then(function(d){P=d.products||[];rP();rW();if(isAO)lAP();hideLoading()}).catch(function(e){hideLoading()})}
 function lO(){fetch(API+'/api/orders?customer_id='+(U.tid||0)).then(function(r){return r.json()}).then(function(d){O=d||[];rO();if(isAO)lAO()}).catch(function(e){})}
-window.oAP=function(){if(!U.isAdmin){toast(t('adminUnauth'));return}var pw=prompt(t('adminPass'));if(pw!=='sadmin'){toast(t('adminWrong'));return}showLoading();fetch(API+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})}).then(function(r){return r.json()}).then(function(d){hideLoading();if(d.token){aT=d.token;isAO=true;document.getElementById('aOverlay').classList.add('active');sAT('dash');lP();lO();toast(t('adminWelcome'))}else{toast(t('adminWrong'))}}).catch(function(){hideLoading();toast('❌ Error')})}
+window.oAP=function(){if(!U.isAdmin){toast('❌ Unauthorized');return}var pw=prompt('🔐 Admin password:');if(pw!=='sadmin'){toast('❌ Wrong!');return}showLoading();fetch(API+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})}).then(function(r){return r.json()}).then(function(d){hideLoading();if(d.token){aT=d.token;isAO=true;document.getElementById('aOverlay').classList.add('active');sAT('dash');lP();lO();toast('🔐 Welcome!')}else{toast('❌ Wrong!')}}).catch(function(){hideLoading();toast('❌ Error')})}
 window.cAP=function(){document.getElementById('aOverlay').classList.remove('active');isAO=false}
 function sAT(t){document.querySelectorAll('.atb').forEach(function(e){e.classList.remove('active')});document.querySelectorAll('.asec').forEach(function(e){e.classList.remove('active')});var tb=document.querySelector('[data-atab="'+t+'"]');if(tb)tb.classList.add('active');var s=document.getElementById('a-'+t);if(s)s.classList.add('active');if(t==='dash'){var uq=[];O.forEach(function(o){if(uq.indexOf(o.customer_id)===-1)uq.push(o.customer_id)});document.getElementById('dStats').innerHTML='<div class="sc"><div class="sv">'+P.length+'</div><div class="sl">📦 Products</div></div><div class="sc"><div class="sv">'+O.length+'</div><div class="sl">📋 Orders</div></div><div class="sc"><div class="sv">'+O.filter(function(o){return o.status==='pending'}).length+'</div><div class="sl">⏳ Pending</div></div><div class="sc"><div class="sv">'+uq.length+'</div><div class="sl">👥 Customers</div></div>'}if(t==='prods'){lAP();document.getElementById('apc').innerHTML=CAT.map(function(c){return'<option>'+c+'</option>'}).join('');document.getElementById('pdz').onclick=function(){document.getElementById('api2').click()};document.getElementById('api2').onchange=function(e){var files=Array.from(e.target.files).slice(0,3);pP=[];var loaded=0;files.forEach(function(f,i){var r=new FileReader();r.onload=function(ev){pP.push(ev.target.result);loaded++;if(loaded===files.length)rPP()};r.readAsDataURL(f)});this.value=''};rCL()}if(t==='ords')lAO()}
 function rPP(){document.getElementById('ppv').innerHTML=pP.map(function(p,i){return'<div class="pti"><img src="'+p+'"><button class="rt" onclick="rPP2('+i+')">✕</button></div>'}).join('')}
@@ -171,17 +141,14 @@ function lAP(){var h='';P.forEach(function(p){h+='<div class="api"><img src="'+g
 window.dP=function(id){if(!confirm('Delete?'))return;showLoading();fetch(API+'/api/products/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+aT}}).then(function(){hideLoading();lP();toast('🗑️ Deleted')})}
 function lAO(){if(!aT){document.getElementById('aolist').innerHTML='<p style="text-align:center;padding:20px">Login required.</p>';return}showLoading();fetch(API+'/api/orders?all=true',{headers:{'Authorization':'Bearer '+aT}}).then(function(r){return r.json()}).then(function(orders){hideLoading();var h='';orders.forEach(function(o){var sb='sp',sl='PENDING';if(o.status==='confirmed'){sb='spa';sl='CONFIRMED'}else if(o.status==='paid'){sb='sbl';sl='PAID'}else if(o.status==='cancelled'){sb='sca';sl='CANCELLED'}var ts=o.timestamp||'';h+='<div class="oc" style="margin:0 0 8px"><div class="oh"><b>#'+o.id+'</b><span class="sb2 '+sb+'">'+sl+'</span></div>'+(ts?'<p style="font-size:10px;color:var(--ts)">🕐 '+ts+'</p>':'')+'<p>👤 '+o.customer_name+' ('+o.customer_username+')</p><p>'+o.items.map(function(i){return i.name+' ×'+i.quantity}).join(', ')+'</p><p><b style="color:var(--g)">'+o.total.toLocaleString()+' Birr</b></p><div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-xs btn-g" onclick="uOS(\''+o.id+'\',\'confirmed\')">✅ Confirm</button><button class="btn btn-xs btn-b" onclick="uOS(\''+o.id+'\',\'paid\')">💳 Paid</button><button class="btn btn-xs btn-d" onclick="uOS(\''+o.id+'\',\'cancelled\')">❌ Cancel</button><button class="btn btn-xs btn-s" onclick="window.open(\'https://t.me/'+o.customer_username.replace('@','')+'\')">📞 Contact</button></div></div>'});document.getElementById('aolist').innerHTML=h||'<p style="text-align:center;padding:20px">No orders.</p>'})}
 window.uOS=function(id,s){showLoading();fetch(API+'/api/orders/'+id+'/status',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+aT},body:JSON.stringify({status:s})}).then(function(){hideLoading();lO();toast('✦ Updated!')})}
-
 function aTH(){document.body.classList.remove('theme-obsidian');if(theme==='obsidian')document.body.classList.add('theme-obsidian');save('theme',theme);document.querySelectorAll('#tPopup .to2[data-theme]').forEach(function(e){e.classList.remove('selected')});var el=document.querySelector('#tPopup .to2[data-theme="'+theme+'"]');if(el)el.classList.add('selected')}
 function updateLangUI(){document.querySelectorAll('#tPopup .to2[data-lang]').forEach(function(e){e.classList.remove('selected')});var el=document.querySelector('#tPopup .to2[data-lang="'+lang+'"]');if(el)el.classList.add('selected');rCats();rGF();rP();rW();rC();rO();document.getElementById('si').placeholder=t('search');uUB()}
 function rCats(){var all=['All'].concat(CAT);var h='';all.forEach(function(c){var dn=c==='All'?t('all'):tcat(c);h+='<span class="cc'+(c===cat?' active':'')+'" data-cat="'+c+'">'+dn+'</span>'});document.getElementById('ctabs').innerHTML=h;document.querySelectorAll('#ctabs .cc').forEach(function(el){el.onclick=function(){cat=this.dataset.cat;rCats();rP()}})}
 function rGF(){var g=['All','Male','Female','Unisex'];var h='';g.forEach(function(g2){var dn=tgen(g2);h+='<span class="gc'+(g2===gen?' active':'')+'" data-gen="'+g2+'">'+dn+'</span>'});document.getElementById('gfilt').innerHTML=h;document.querySelectorAll('#gfilt .gc').forEach(function(el){el.onclick=function(){gen=this.dataset.gen;rGF();rP()}})}
 function shareGEMAX(){var tx='💎 GEMAX Store - Quality to the Max!\n\n🛍️ Shop on Telegram\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n👉 @Gemax_shopping_bot\n📢 Channel: @Gemax_shopping';if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.openTelegramLink('https://t.me/share/url?url=https://t.me/Gemax_shopping_bot&text='+encodeURIComponent(tx))}else{navigator.clipboard.writeText('💎 Shop GEMAX Store!\n@Gemax_shopping_bot').then(function(){toast('📋 Link copied!')})}}
-
 function init(){
     var sc=load('cat',null);if(sc&&sc.length)CAT=sc;
-    detectUser();
-    var sl=load('lang',null);lang=sl||'en';
+    detectUser();var sl=load('lang',null);lang=sl||'en';
     C=load('cart',[]);W=load('wish',[]);theme=load('theme','ivory');
     aTH();uUB();rCats();rGF();uCB();swS('home');updateLangUI();
     document.getElementById('si').addEventListener('input',rP);
@@ -202,6 +169,7 @@ function init(){
     lP();lO();
 }
 init();
+})();
 </script>
 </body>
 </html>
