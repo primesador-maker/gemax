@@ -66,11 +66,33 @@ async function sendMessage(chatId, text, opts) {
 }
 
 async function handleUpdate(update) {
+    // SAVE USER on ANY interaction (message, button click, Mini App open)
+    if (update.message) {
+        var uid = update.message.from && update.message.from.id;
+        if (uid) { userIds.add(uid); saveUsers(); }
+    }
+    if (update.callback_query) {
+        var uid2 = update.callback_query.from && update.callback_query.from.id;
+        if (uid2) { userIds.add(uid2); saveUsers(); }
+    }
+
+    // Handle Mini App data (user ping + orders)
+    if (update.message && update.message.web_app_data) {
+        try {
+            var data = JSON.parse(update.message.web_app_data.data);
+            if (data.type === 'user_ping') {
+                console.log('📱 User opened Mini App');
+                return;
+            }
+        } catch(e) {}
+    }
+
+    // Handle messages
     if (update.message) {
         var msg = update.message; var chatId = msg.chat.id; var text = msg.text || '';
         var username = msg.from && msg.from.username ? '@' + msg.from.username : 'Customer';
         var userId = msg.from && msg.from.id;
-        if (userId) { userIds.add(userId); saveUsers() }
+
         if (text === '/start' || text === '/Start' || text === 'start') {
             sendMessage(chatId, '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:', { reply_markup: { inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]] } });
             return;
@@ -89,6 +111,11 @@ async function handleUpdate(update) {
             for (var uid of userIds) { try { var r = await fetch(BASE_URL + '/sendPhoto', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: uid, photo: fid, caption: cap ? '📢 GEMAX Store\n\n' + cap : '📢 GEMAX Store' }) }); if ((await r.json()).ok) sent++; await new Promise(r => setTimeout(r, 300)); } catch(e) {} }
             sendMessage(chatId, '✅ Photo sent to ' + sent + '/' + userIds.size + ' users!'); return;
         }
+        if (msg.video && String(userId) === String(ADMIN_ID)) {
+            var cap2 = msg.caption || ''; var fid2 = msg.video.file_id; var sent2 = 0;
+            for (var uid of userIds) { try { var r2 = await fetch(BASE_URL + '/sendVideo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: uid, video: fid2, caption: cap2 ? '📢 GEMAX Store\n\n' + cap2 : '📢 GEMAX Store' }) }); if ((await r2.json()).ok) sent2++; await new Promise(r => setTimeout(r, 300)); } catch(e) {} }
+            sendMessage(chatId, '✅ Video sent to ' + sent2 + '/' + userIds.size + ' users!'); return;
+        }
         if (text === '/count' && String(userId) === String(ADMIN_ID)) { sendMessage(chatId, '📊 Total bot users: ' + userIds.size); return; }
     }
 }
@@ -96,4 +123,4 @@ async function handleUpdate(update) {
 console.log('🤖 GEMAX Bot starting...');
 getUpdates();
 checkNewOrders();
-console.log('✅ GEMAX Store Bot ready! 📦 50 products | 🔔 Notifications ON | 📢 Broadcast ON');
+console.log('✅ GEMAX Store Bot ready! 📦 50 products | 🔔 Notifications ON | 📢 Broadcast ON | 👥 Auto-count users');
