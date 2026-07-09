@@ -66,7 +66,7 @@ async function sendMessage(chatId, text, opts) {
 }
 
 async function handleUpdate(update) {
-    // SAVE USER on ANY interaction (message, button click, Mini App open)
+    // SAVE USER on ANY interaction
     if (update.message) {
         var uid = update.message.from && update.message.from.id;
         if (uid) { userIds.add(uid); saveUsers(); }
@@ -76,14 +76,11 @@ async function handleUpdate(update) {
         if (uid2) { userIds.add(uid2); saveUsers(); }
     }
 
-    // Handle Mini App data (user ping + orders)
+    // Handle Mini App data
     if (update.message && update.message.web_app_data) {
         try {
             var data = JSON.parse(update.message.web_app_data.data);
-            if (data.type === 'user_ping') {
-                console.log('📱 User opened Mini App');
-                return;
-            }
+            if (data.type === 'user_ping') { console.log('📱 User opened Mini App'); return; }
         } catch(e) {}
     }
 
@@ -93,8 +90,9 @@ async function handleUpdate(update) {
         var username = msg.from && msg.from.username ? '@' + msg.from.username : 'Customer';
         var userId = msg.from && msg.from.id;
 
-        if (text === '/start' || text === '/Start' || text === 'start') {
-            sendMessage(chatId, '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse & order in Telegram\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:', { reply_markup: { inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]] } });
+        // DEEP LINK SUPPORT: /start, /start welcome, /start anything
+        if (text === '/start' || text === '/Start' || text === 'start' || text.startsWith('/start ')) {
+            sendMessage(chatId, '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse 50+ products in Telegram\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:', { reply_markup: { inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]] } });
             return;
         }
         if (text === '/help' || text === '/Help' || text === 'help') {
@@ -123,4 +121,4 @@ async function handleUpdate(update) {
 console.log('🤖 GEMAX Bot starting...');
 getUpdates();
 checkNewOrders();
-console.log('✅ GEMAX Store Bot ready! 📦 50 products | 🔔 Notifications ON | 📢 Broadcast ON | 👥 Auto-count users');
+console.log('✅ GEMAX Store Bot ready! 📦 50 products | 🔔 Notifications ON | 📢 Broadcast ON | 🔗 Deep links ON');
