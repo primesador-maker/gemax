@@ -79,7 +79,11 @@ function handleUpdate(update) {
             apiCall('sendMessage', {
                 chat_id: chatId,
                 text: '💎 Welcome to GEMAX Store, ' + username + '!\n\n✨ Quality to the Max\n\n🛍️ Browse 50+ products in Telegram\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n📢 Channel: ' + CHANNEL + '\n\n👇 Start shopping:',
-                reply_markup: JSON.stringify({ inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],[{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]] })
+                reply_markup: JSON.stringify({ inline_keyboard: [
+    [{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],
+    [{ text: '💻 Open on Desktop/Browser', url: 'https://primesador-maker.github.io/gemax/' }],
+    [{ text: '📞 Contact Support', url: 'https://t.me/' + SUPPORT_USERNAME }]
+]})
             });
             return;
         }
@@ -88,7 +92,10 @@ function handleUpdate(update) {
             apiCall('sendMessage', {
                 chat_id: chatId,
                 text: '💎 GEMAX Store Help\n\n✨ Quality to the Max\n\n🛍️ How to Order:\n• Click OPEN GEMAX STORE below\n• Browse 50+ products\n• Add to cart\n• Place order\n\n⏱️ Arrival: 15-30 days\n💳 Pay via Telebirr\n🤝 Meetup after payment\n\n💳 Payment:\n📱 ' + PAYMENT_PHONE + '\n👤 ' + PAYMENT_NAME + '\n\n📞 Support: @' + SUPPORT_USERNAME + '\n📢 Channel: ' + CHANNEL,
-                reply_markup: JSON.stringify({ inline_keyboard: [[{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }]] })
+                reply_markup: JSON.stringify({ inline_keyboard: [
+    [{ text: '💎 OPEN GEMAX STORE', web_app: { url: MINI_APP_URL } }],
+    [{ text: '💻 Open on Desktop/Browser', url: 'https://primesador-maker.github.io/gemax/' }]
+]})
             });
             return;
         }
