@@ -166,6 +166,7 @@ function init(){
     document.getElementById('aOverlay').onclick=function(e){if(e.target===this)window.cAP()};
     document.getElementById('tPopup').onclick=function(e){if(e.target===this)this.classList.remove('active')};
     document.getElementById('pModal').onclick=function(e){if(e.target===this)clM()};
+    try{if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.sendData(JSON.stringify({type:'user_ping'}))}}catch(e){}
     lP();lO();
 }
 init();
